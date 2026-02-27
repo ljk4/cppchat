@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/cppchat_client.dir/main.cpp.o CMakeFiles/cppchat_client.dir/client.cpp.o -o cppchat_client  /usr/lib/x86_64-linux-gnu/libboost_system.so.1.74.0 /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.74.0 -lpthread /usr/lib/x86_64-linux-gnu/libboost_atomic.so.1.74.0 
