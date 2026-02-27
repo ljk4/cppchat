@@ -75,7 +75,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         source: "docker-compose.yml,web/"
-        target: "/opt/cppchat"
+        target: "cppchat"
 
     - name: Deploy to Server
       uses: appleboy/ssh-action@master
@@ -84,7 +84,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          cd /opt/cppchat
+          cd ~/cppchat
           # Create a .env file to pass the Docker Hub username to docker-compose
           echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" > .env
           docker compose pull
