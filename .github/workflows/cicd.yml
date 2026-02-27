@@ -65,6 +65,8 @@ jobs:
         file: docker/Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/cppchat-server:latest
+        build-args: |
+          BASE_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/cppchat-base:latest
 
     - name: Copy docker-compose and web files to server
       uses: appleboy/scp-action@master

@@ -1,5 +1,6 @@
 # Stage 1: Build
-FROM cppchat-base:latest AS builder
+ARG BASE_IMAGE=cppchat-base:latest
+FROM ${BASE_IMAGE} AS builder
 
 WORKDIR /app
 COPY . .
