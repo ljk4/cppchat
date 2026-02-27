@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  server:
+    image: ${DOCKERHUB_USERNAME:-local}/cppchat-server:latest
+    container_name: cppchat-server
+    ports:
+      - "9090:9090"
+    volumes:
+      - chat_data:/app/data
+    restart: unless-stopped
+
+  client:
+    image: ${DOCKERHUB_USERNAME:-local}/cppchat-server:latest
+    container_name: cppchat-client
+    command: ["./cppchat_client", "server", "9090"]
+    depends_on:
+      - server
+    stdin_open: true
+    tty: true
+    profiles:
+      - client
+
+  web:
+    image: nginx:alpine
+    container_name: cppchat-web
+    ports:
+      - "80:80"
+    volumes:
+      - ./web:/usr/share/nginx/html:ro
+    depends_on:
+      - server
+    restart: unless-stopped
+
+volumes:
+  chat_data:

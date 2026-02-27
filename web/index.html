@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CppChat Web</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; }
+        #chat-container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        #messages { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; background: #fafafa; }
+        .msg { margin-bottom: 8px; }
+        .msg strong { color: #0056b3; }
+        .sys-msg { color: #888; font-style: italic; }
+        input[type="text"], input[type="password"] { width: calc(100% - 22px); padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 10px 15px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #004494; }
+        #auth-section, #chat-section { display: none; }
+        #auth-section.active, #chat-section.active { display: block; }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <h2 style="text-align: center;">CppChat</h2>
+    
+    <div id="auth-section" class="active">
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="register()">Register</button>
+        <button onclick="login()">Login</button>
+        <p id="auth-status" class="sys-msg"></p>
+    </div>
+
+    <div id="chat-section">
+        <div id="messages"></div>
+        <input type="text" id="message-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    let ws;
+    let currentUser = "";
+
+    function connect() {
+        ws = new WebSocket("ws://" + window.location.hostname + ":9090");
+        
+        ws.onopen = () => {
+            console.log("Connected to server");
+        };
+
+        ws.onmessage = (event) => {
+            const msg = JSON.parse(event.data);
+            
+            if (msg.type === 1) { // REGISTER_RESP
+                document.getElementById('auth-status').innerText = msg.content;
+            } else if (msg.type === 3) { // LOGIN_RESP
+                if (msg.success) {
+                    document.getElementById('auth-section').classList.remove('active');
+                    document.getElementById('chat-section').classList.add('active');
+                    currentUser = document.getElementById('username').value;
+                    appendMessage("System", "Logged in successfully.", true);
+                } else {
+                    document.getElementById('auth-status').innerText = msg.content;
+                }
+            } else if (msg.type === 4) { // CHAT_MSG
+                appendMessage(msg.sender, msg.content);
+            } else if (msg.type === 5) { // ERROR_MSG
+                appendMessage("Error", msg.content, true);
+            }
+        };
+
+        ws.onclose = () => {
+            appendMessage("System", "Disconnected from server.", true);
+            setTimeout(connect, 3000); // Auto reconnect
+        };
+    }
+
+    function register() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+        ws.send(JSON.stringify({ type: 0, sender: user, password: pass, content: "" }));
+    }
+
+    function login() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+        ws.send(JSON.stringify({ type: 2, sender: user, password: pass, content: "" }));
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('message-input');
+        const content = input.value.trim();
+        if (content && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 4, sender: currentUser, content: content }));
+            input.value = '';
+        }
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    function appendMessage(sender, content, isSystem = false) {
+        const messagesDiv = document.getElementById('messages');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'msg' + (isSystem ? ' sys-msg' : '');
+        msgDiv.innerHTML = `<strong>${sender}:</strong> ${content}`;
+        messagesDiv.appendChild(msgDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // Initialize connection
+    connect();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+Start testing: Feb 27 11:20 UTC
+----------------------------------------------------------
+1/1 Testing: CppChatTests
+1/1 Test: CppChatTests
+Command: "/app/build/tests/cppchat_tests"
+Directory: /app/build/tests
+"CppChatTests" start time: Feb 27 11:20 UTC
+Output:
+----------------------------------------------------------
+[==========] Running 7 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 4 tests from DatabaseTest
+[ RUN      ] DatabaseTest.RegisterUserSuccess
+[       OK ] DatabaseTest.RegisterUserSuccess (12 ms)
+[ RUN      ] DatabaseTest.RegisterUserDuplicate
+[       OK ] DatabaseTest.RegisterUserDuplicate (8 ms)
+[ RUN      ] DatabaseTest.VerifyUserSuccess
+[       OK ] DatabaseTest.VerifyUserSuccess (7 ms)
+[ RUN      ] DatabaseTest.VerifyUserFailure
+[       OK ] DatabaseTest.VerifyUserFailure (9 ms)
+[----------] 4 tests from DatabaseTest (37 ms total)
+
+[----------] 3 tests from ProtocolTest
+[ RUN      ] ProtocolTest.ToJson
+[       OK ] ProtocolTest.ToJson (0 ms)
+[ RUN      ] ProtocolTest.FromJson
+[       OK ] ProtocolTest.FromJson (0 ms)
+[ RUN      ] ProtocolTest.FromJsonMissingFields
+[       OK ] ProtocolTest.FromJsonMissingFields (0 ms)
+[----------] 3 tests from ProtocolTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 7 tests from 2 test suites ran. (37 ms total)
+[  PASSED  ] 7 tests.
+<end of output>
+Test time =   0.04 sec
+----------------------------------------------------------
+Test Passed.
+"CppChatTests" end time: Feb 27 11:20 UTC
+"CppChatTests" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Feb 27 11:20 UTC
