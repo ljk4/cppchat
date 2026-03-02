@@ -60,3 +60,5 @@
 **解决方案**：
 - 查看容器日志：`docker-compose logs server` 或 `docker-compose logs client`。
 - 检查启动命令是否正确，是否有必要的环境变量或配置文件缺失。
+## 5. 密钥生成第二把
+要在Enter file in which to save the key时输入新文件名：Enter file in which to save the key (/home/ubuntu/.ssh/id_ed25519): /home/ubuntu/.ssh/id_ed25519_cppchat，并且要配置仓库使用新密钥，否则会配对旧密钥：git config core.sshCommand "ssh -i /home/ubuntu/.ssh/id_ed25519_cppchat -F /dev/null"
